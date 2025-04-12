@@ -20,7 +20,7 @@ class PostCard extends StatelessWidget {
               post.userName,
               style: const TextStyle(fontWeight: FontWeight.bold),
             ),
-            subtitle: Text(post.time),
+            subtitle: Text('${post.time} • ${post.distance.toInt()}m away'),
           ),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16.0),
@@ -65,18 +65,12 @@ class PostCard extends StatelessWidget {
             child: Row(
               children: [
                 IconButton(
-                  icon: const Icon(Icons.favorite_border, color: Colors.teal),
+                  icon: const Icon(Icons.favorite_border),
                   onPressed: () {},
                 ),
-                IconButton(
-                  icon: const Icon(Icons.comment, color: Colors.teal),
-                  onPressed: () {},
-                ),
+                IconButton(icon: const Icon(Icons.comment), onPressed: () {}),
                 const Spacer(),
-                IconButton(
-                  icon: const Icon(Icons.share, color: Colors.teal),
-                  onPressed: () {},
-                ),
+                IconButton(icon: const Icon(Icons.share), onPressed: () {}),
               ],
             ),
           ),

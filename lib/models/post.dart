@@ -5,6 +5,8 @@ class Post {
   final String imageUrl;
   final String userName;
   final String time;
+  final double distance; // meters
+  final String type;
 
   Post({
     required this.id,
@@ -13,5 +15,7 @@ class Post {
     required this.imageUrl,
     required this.userName,
     required this.time,
+    required this.distance,
+    required this.type,
   });
 }

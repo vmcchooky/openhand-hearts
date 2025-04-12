@@ -10,7 +10,7 @@ class MapScreen extends StatefulWidget {
 
 class _MapScreenState extends State<MapScreen> {
   late GoogleMapController mapController;
-  final LatLng _center = const LatLng(10.7769, 106.7009); // TP.HCM
+  final LatLng _center = const LatLng(10.7769, 106.7009);
   final Set<Marker> _markers = {};
 
   @override
@@ -36,18 +36,12 @@ class _MapScreenState extends State<MapScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Map'),
-        centerTitle: true,
-      ),
+      appBar: AppBar(title: const Text('Map'), centerTitle: true),
       body: Stack(
         children: [
           GoogleMap(
             onMapCreated: _onMapCreated,
-            initialCameraPosition: CameraPosition(
-              target: _center,
-              zoom: 12.0,
-            ),
+            initialCameraPosition: CameraPosition(target: _center, zoom: 12.0),
             markers: _markers,
           ),
           DraggableScrollableSheet(
@@ -58,7 +52,9 @@ class _MapScreenState extends State<MapScreen> {
               return Container(
                 decoration: BoxDecoration(
                   color: Colors.white,
-                  borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
+                  borderRadius: const BorderRadius.vertical(
+                    top: Radius.circular(20),
+                  ),
                   boxShadow: [
                     BoxShadow(
                       color: Colors.black.withOpacity(0.1),
@@ -71,12 +67,12 @@ class _MapScreenState extends State<MapScreen> {
                   controller: scrollController,
                   children: const [
                     ListTile(
-                      leading: Icon(Icons.location_on, color: Colors.teal),
+                      leading: Icon(Icons.location_on),
                       title: Text('Áo thun vintage'),
                       subtitle: Text('Gần trung tâm TP.HCM'),
                     ),
                     ListTile(
-                      leading: Icon(Icons.location_on, color: Colors.teal),
+                      leading: Icon(Icons.location_on),
                       title: Text('Máy ảnh Canon'),
                       subtitle: Text('Quận 7, TP.HCM'),
                     ),

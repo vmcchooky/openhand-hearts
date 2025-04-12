@@ -13,6 +13,11 @@ class _ItemFilterDialogState extends State<ItemFilterDialog> {
     'Electronics': false,
     'Books': false,
     'Food': false,
+    'Shoes': false,
+    'Stationery': false,
+    'Snacks': false,
+    'Drinks': false,
+    'Paper': false,
     'Others': false,
   };
 
@@ -33,7 +38,6 @@ class _ItemFilterDialogState extends State<ItemFilterDialog> {
                       _filters[item] = value!;
                     });
                   },
-                  activeColor: Colors.teal,
                 );
               }).toList(),
         ),

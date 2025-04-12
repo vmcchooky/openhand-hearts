@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import '../widgets/item_filter.dart';
-import '../models/post.dart';
 import '../widgets/post_card.dart';
+import '../models/post.dart';
+import '../widgets/item_filter.dart';
 
 class AccountScreen extends StatefulWidget {
   const AccountScreen({super.key});
@@ -37,6 +37,8 @@ class _AccountScreenState extends State<AccountScreen> {
         imageUrl: 'https://via.placeholder.com/300',
         userName: 'You',
         time: 'Hôm qua',
+        distance: 0,
+        type: 'Clothes',
       ),
     ];
     final List<Post> receivedPosts = [
@@ -47,289 +49,200 @@ class _AccountScreenState extends State<AccountScreen> {
         imageUrl: 'https://via.placeholder.com/300',
         userName: 'UserB',
         time: '2 ngày trước',
+        distance: 800,
+        type: 'Books',
       ),
     ];
 
     return Scaffold(
       appBar: AppBar(title: const Text('Account'), centerTitle: true),
-      body: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+      body: ListView(
+        padding: const EdgeInsets.all(16.0),
+        children: [
+          // Notifications
+          ExpansionTile(
+            leading: const Icon(Icons.notifications),
+            title: const Text('Notifications'),
             children: [
-              // Thông báo
-              Card(
-                child: Padding(
-                  padding: const EdgeInsets.all(16.0),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      const Text(
-                        'Notifications',
-                        style: TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      SwitchListTile(
-                        title: const Text('Receive nearby item notifications'),
-                        value: _receiveNotifications,
-                        onChanged: (value) {
-                          setState(() {
-                            _receiveNotifications = value;
-                          });
-                        },
-                        activeColor: Colors.teal,
-                      ),
-                      OutlinedButton(
-                        onPressed: () {
-                          showDialog(
-                            context: context,
-                            builder: (context) => const ItemFilterDialog(),
-                          );
-                        },
-                        child: const Text('Filter Item Types'),
-                      ),
-                    ],
-                  ),
-                ),
+              SwitchListTile(
+                title: const Text('Receive nearby item notifications'),
+                value: _receiveNotifications,
+                onChanged: (value) {
+                  setState(() {
+                    _receiveNotifications = value;
+                  });
+                },
               ),
-              const SizedBox(height: 16),
-              // Thông tin người dùng
-              Card(
-                child: Padding(
-                  padding: const EdgeInsets.all(16.0),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      const Text(
-                        'User Information',
-                        style: TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      const SizedBox(height: 8),
-                      Center(
-                        child: CircleAvatar(
-                          radius: 50,
-                          backgroundImage: NetworkImage(
-                            'https://via.placeholder.com/100',
-                          ),
-                        ),
-                      ),
-                      const SizedBox(height: 8),
-                      TextField(
-                        controller: _nameController,
-                        decoration: const InputDecoration(
-                          labelText: 'Full Name',
-                        ),
-                      ),
-                      TextField(
-                        controller: _phoneController,
-                        decoration: const InputDecoration(
-                          labelText: 'Phone Number',
-                        ),
-                      ),
-                      TextField(
-                        controller: _emailController,
-                        decoration: const InputDecoration(labelText: 'Email'),
-                      ),
-                      TextField(
-                        controller: _nicknameController,
-                        decoration: const InputDecoration(
-                          labelText: 'Nickname',
-                        ),
-                      ),
-                      const SizedBox(height: 8),
-                      Center(
-                        child: ElevatedButton(
-                          onPressed: () {
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              const SnackBar(
-                                content: Text('Information updated!'),
-                              ),
-                            );
-                          },
-                          child: const Text('Save Changes'),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-              const SizedBox(height: 16),
-              // Bảo mật
-              Card(
-                child: Padding(
-                  padding: const EdgeInsets.all(16.0),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      const Text(
-                        'Security',
-                        style: TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      TextField(
-                        controller: _passwordController,
-                        decoration: const InputDecoration(
-                          labelText: 'New Password',
-                        ),
-                        obscureText: true,
-                      ),
-                      const SizedBox(height: 8),
-                      ElevatedButton(
-                        onPressed: () {
-                          if (_passwordController.text.isNotEmpty) {
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              const SnackBar(
-                                content: Text('Password updated!'),
-                              ),
-                            );
-                            _passwordController.clear();
-                          }
-                        },
-                        child: const Text('Change Password'),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-              const SizedBox(height: 16),
-              // Fire Heart (Vật phẩm đã chia sẻ)
-              Card(
-                child: Padding(
-                  padding: const EdgeInsets.all(16.0),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      const Text(
-                        'Fire Heart (Shared Items)',
-                        style: TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      ...sharedPosts
-                          .map((post) => PostCard(post: post))
-                          .toList(),
-                    ],
-                  ),
-                ),
-              ),
-              const SizedBox(height: 16),
-              // Receive (Vật phẩm đã nhận)
-              Card(
-                child: Padding(
-                  padding: const EdgeInsets.all(16.0),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      const Text(
-                        'Received Items',
-                        style: TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      ...receivedPosts
-                          .map((post) => PostCard(post: post))
-                          .toList(),
-                    ],
-                  ),
-                ),
-              ),
-              const SizedBox(height: 16),
-              // Góp ý
-              Card(
-                child: Padding(
-                  padding: const EdgeInsets.all(16.0),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      const Text(
-                        'Feedback',
-                        style: TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      TextField(
-                        controller: _feedbackController,
-                        decoration: const InputDecoration(
-                          labelText: 'Your Feedback',
-                          border: OutlineInputBorder(),
-                        ),
-                        maxLines: 4,
-                      ),
-                      const SizedBox(height: 8),
-                      ElevatedButton(
-                        onPressed: () {
-                          if (_feedbackController.text.isNotEmpty) {
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              const SnackBar(content: Text('Feedback sent!')),
-                            );
-                            _feedbackController.clear();
-                          }
-                        },
-                        child: const Text('Send Feedback'),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-              const SizedBox(height: 16),
-              // Liên hệ & Điều khoản
-              Card(
-                child: Padding(
-                  padding: const EdgeInsets.all(16.0),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      const Text(
-                        'Contact & Terms',
-                        style: TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      ListTile(
-                        leading: const Icon(
-                          Icons.contact_mail,
-                          color: Colors.teal,
-                        ),
-                        title: const Text('Contact Us'),
-                        onTap: () {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(
-                              content: Text('Contact: support@example.com'),
-                            ),
-                          );
-                        },
-                      ),
-                      ListTile(
-                        leading: const Icon(
-                          Icons.description,
-                          color: Colors.teal,
-                        ),
-                        title: const Text('Terms & Conditions'),
-                        onTap: () {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(content: Text('Viewing Terms...')),
-                          );
-                        },
-                      ),
-                    ],
-                  ),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                child: OutlinedButton(
+                  onPressed: () {
+                    showDialog(
+                      context: context,
+                      builder: (context) => const ItemFilterDialog(),
+                    );
+                  },
+                  child: const Text('Filter Item Types'),
                 ),
               ),
             ],
           ),
-        ),
+          // User Information
+          ExpansionTile(
+            leading: const Icon(Icons.person),
+            title: const Text('User Information'),
+            children: [
+              Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Column(
+                  children: [
+                    const CircleAvatar(
+                      radius: 50,
+                      backgroundImage: NetworkImage(
+                        'https://via.placeholder.com/100',
+                      ),
+                    ),
+                    const SizedBox(height: 8),
+                    TextField(
+                      controller: _nameController,
+                      decoration: const InputDecoration(labelText: 'Full Name'),
+                    ),
+                    TextField(
+                      controller: _phoneController,
+                      decoration: const InputDecoration(
+                        labelText: 'Phone Number',
+                      ),
+                    ),
+                    TextField(
+                      controller: _emailController,
+                      decoration: const InputDecoration(labelText: 'Email'),
+                    ),
+                    TextField(
+                      controller: _nicknameController,
+                      decoration: const InputDecoration(labelText: 'Nickname'),
+                    ),
+                    const SizedBox(height: 8),
+                    ElevatedButton(
+                      onPressed: () {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(content: Text('Information updated!')),
+                        );
+                      },
+                      child: const Text('Save Changes'),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+          // Security
+          ExpansionTile(
+            leading: const Icon(Icons.lock),
+            title: const Text('Security'),
+            children: [
+              Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Column(
+                  children: [
+                    TextField(
+                      controller: _passwordController,
+                      decoration: const InputDecoration(
+                        labelText: 'New Password',
+                      ),
+                      obscureText: true,
+                    ),
+                    const SizedBox(height: 8),
+                    ElevatedButton(
+                      onPressed: () {
+                        if (_passwordController.text.isNotEmpty) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(content: Text('Password updated!')),
+                          );
+                          _passwordController.clear();
+                        }
+                      },
+                      child: const Text('Change Password'),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+          // Fire Heart
+          ExpansionTile(
+            leading: const Icon(Icons.favorite),
+            title: const Text('Fire Heart (Shared Items)'),
+            children: sharedPosts.map((post) => PostCard(post: post)).toList(),
+          ),
+          // Received Items
+          ExpansionTile(
+            leading: const Icon(Icons.receipt),
+            title: const Text('Received Items'),
+            children:
+                receivedPosts.map((post) => PostCard(post: post)).toList(),
+          ),
+          // Feedback
+          ExpansionTile(
+            leading: const Icon(Icons.feedback),
+            title: const Text('Feedback'),
+            children: [
+              Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Column(
+                  children: [
+                    TextField(
+                      controller: _feedbackController,
+                      decoration: const InputDecoration(
+                        labelText: 'Your Feedback',
+                        border: OutlineInputBorder(),
+                      ),
+                      maxLines: 4,
+                    ),
+                    const SizedBox(height: 8),
+                    ElevatedButton(
+                      onPressed: () {
+                        if (_feedbackController.text.isNotEmpty) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(content: Text('Feedback sent!')),
+                          );
+                          _feedbackController.clear();
+                        }
+                      },
+                      child: const Text('Send Feedback'),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+          // Contact & Terms
+          ExpansionTile(
+            leading: const Icon(Icons.info),
+            title: const Text('Contact & Terms'),
+            children: [
+              ListTile(
+                leading: const Icon(Icons.contact_mail),
+                title: const Text('Contact Us'),
+                onTap: () {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(
+                      content: Text('Contact: support@example.com'),
+                    ),
+                  );
+                },
+              ),
+              ListTile(
+                leading: const Icon(Icons.description),
+                title: const Text('Terms & Conditions'),
+                onTap: () {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(content: Text('Viewing Terms...')),
+                  );
+                },
+              ),
+            ],
+          ),
+        ],
       ),
     );
   }
